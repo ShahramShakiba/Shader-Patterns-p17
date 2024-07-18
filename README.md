@@ -9,17 +9,34 @@
 
  <br/>
 
-## What is a Shader
+## What are Shader Patterns
+Shader patterns are techniques used in computer graphics to create visual effects on 3D models. They are pieces of code that run on the GPU to determine the color of each pixel on the screen. <br/> Shaders can create complex visual effects like lighting, shadows, reflections, and textures.
 
+<br/>
 
-<br/><br/> 
+> ### Patterns in Shaders  
+These are "reusable" solutions or techniques used to solve common graphics problems. They help in creating specific visual effects consistently across different projects.
+
+<br/> 
+
+> ### Why Use Patterns in Shaders?
+1. Efficiency :
+   - Patterns provide a tested and optimized way to achieve common visual effects. Instead of writing shader code from scratch, you can use or adapt existing patterns.
+
+2. Consistency :
+   - Using patterns ensures that similar visual effects look the same across different parts of your application or different applications altogether.
+
+3. Simplification :
+   - Patterns simplify the shader development process. Developers can focus on creating new effects rather than reinventing existing ones.
+
+<br/> 
 
 > [!IMPORTANT]
-> #### Benefits of Using 
->> 1. 
->> 2. 
->> 3.
->> 4. 
+> #### Benefits of Using Shader Patterns
+>> 1. Improved Performance : <br/> Patterns are often optimized for performance. Using them can lead to faster and more efficient rendering.
+>> 2. Code Reusability : <br/> Patterns can be reused across different projects, saving development time and effort.
+>> 3. Easier Maintenance : <br/> Patterns are well-documented and understood by many developers, making it easier to maintain and update shader code.
+>> 4. Learning and Sharing : <br/> Shader patterns help in learning how to create various effects and share knowledge within the developer community.
 
 <br/> 
 
@@ -42,7 +59,7 @@
 ***
 
 <!--======================= Social Media ===========================-->
-### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People%20with%20professions/Man%20Detective%20Light%20Skin%20Tone.png" alt="Man Detective Light Skin Tone" width="45" />  _Feel free to contact me for collaboration or inquiries._ 
+### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People%20with%20professions/Man%20Detective%20Light%20Skin%20Tone.png" alt="Man Detective Light Skin Tone" width="45" />  _Please contact me for collaboration or inquiries._ 
 <a href="https://www.linkedin.com/in/shahramshakiba/" target="_blank">
     <img src="https://raw.githubusercontent.com/maurodesouza/profile-readme-generator/master/src/assets/icons/social/linkedin/default.svg" width="52" height="40" alt="linkedin logo"  />
   </a> &nbsp;&nbsp;&nbsp;
