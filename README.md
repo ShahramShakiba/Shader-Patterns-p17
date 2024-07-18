@@ -29,7 +29,48 @@ These are "reusable" solutions or techniques used to solve common graphics probl
 3. Simplification :
    - Patterns simplify the shader development process. Developers can focus on creating new effects rather than reinventing existing ones.
 
+<br/> <br/> <br/> 
+
+## Shader Patterns and UV Drawing
+> ### Why Drawing Instead of Using Textures?
+#### _Procedural Textures_ :  
+When shaders create patterns or textures mathematically rather than using image files, this is called procedural texturing. Procedural textures are generated on the fly by the shader code.
+
 <br/> 
+
+> ### Advantages of Procedural Textures:
+1. ` Scalability ` : <br/> Procedural textures can be scaled to any size without losing quality. <br/> <br/> 
+2. ` Variation ` : <br/> They can produce infinite variations, which is great for natural phenomena like noise, wood grain, or marble patterns. <br/> <br/> 
+3. ` Performance ` : <br/> Sometimes, procedural textures can be more efficient because they reduce the need for memory and texture fetching.
+
+<br/> <br/> 
+
+> ### UV Drawing
+- _UV Mapping_ : <br/> This is the process of projecting a 2D texture onto a 3D model. UV coordinates define how the 2D texture maps to the 3D surface. <br/> <br/> 
+- _UV Drawing_ : <br/> In the context of shaders, "drawing" with UV coordinates means creating patterns directly in the shader using mathematical functions that operate on the UV coordinates. <br/> <br/>
+
+So, shaders can "draw" patterns directly based on UV coordinates, and this can be preferable in certain scenarios due to the benefits of procedural generation.
+
+<br/> 
+
+## UV Coordinates
+UV coordinates are 2D coordinates used in 3D modeling to map textures onto the surfaces of 3D models. <br/>
+- ` Range ` :
+  - Typically, UV coordinates range from (0,0) to (1,1), covering the entire texture space. <br/>
+
+- ` U and V Axes ` :
+  - The U and V axes correspond to the horizontal and vertical axes of the texture, respectively.
+
+    <br/>
+    
+> ### How UV Coordinates Work:
+  1. _Mapping_ : 
+     - When you apply a texture to a 3D model, each vertex of the model is associated with a UV coordinate. This tells the renderer which part of the texture should be mapped to that vertex. <br/>
+     
+  2. _Interpolation_ :
+     - The renderer interpolates the UV coordinates across the surface of the polygon, determining how the texture pixels (texels) map to the pixels on the screen.
+
+<br/><br/>
 
 > [!IMPORTANT]
 > #### Benefits of Using Shader Patterns
