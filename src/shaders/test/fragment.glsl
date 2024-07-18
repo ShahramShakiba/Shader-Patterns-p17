@@ -1,9 +1,9 @@
 varying vec2 vUv;
 
 void main() {
-  
-    float strength = step(0.8, mod(vUv.x / 0.1, 1.0));
-    strength *= step(0.8, mod(vUv.y / 0.1, 1.0));
+    float square1 = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+    float square2 = 1.0 - step(0.25, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+    float strength = square1 * square2;
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
@@ -245,47 +245,182 @@ void main() {
 ==================================================
 * Pattern-13
 ==================================================
+- a plane with lots of wide-dots | bars
+
+void main() {
+    float strength = step(0.4, mod(vUv.x / 0.1, 1.0));
+    strength *= step(0.8, mod(vUv.y / 0.1, 1.0));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
 
 
 
 ==================================================
 * Pattern-14
 ==================================================
+- two bars on the right & top stick to each other
+void main() {
+    float barX = step(0.4, mod(vUv.x / 0.1, 1.0));
+    barX *= step(0.8, mod(vUv.y / 0.1, 1.0));
+   
+    float barY = step(0.8, mod(vUv.x / 0.1, 1.0));
+    barY *= step(0.4, mod(vUv.y / 0.1, 1.0));
 
+    float strength = barX + barY;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
 
 
 ==================================================
 * Pattern-15
 ==================================================
+- bunch of plus mark
 
+void main() {
+    float barX = step(0.4, mod(vUv.x / 0.1, 1.0));
+    barX *= step(0.8, mod(vUv.y / 0.1, 1.0));
+   
+    float barY = step(0.8, mod(vUv.x / 0.1 + 0.2, 1.0)); // offset it by 0.2
+    barY *= step(0.4, mod(vUv.y / 0.1 - 0.2, 1.0)); // offset it by 0.2
+
+    float strength = barX + barY;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
 
 
 ==================================================
 * Pattern-16
 ==================================================
+- left and right: white | center: black
 
+void main() {
+    float strength = abs(vUv.x - 0.5);
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+? abs() function:
+    - returns the absolute value of x.
+    - For example, abs(-0.5) returns 0.5 and abs(0.5) returns 0.5.
+
+ - vUv.x varies from 0.0 to 1.0 across the horizontal axis.
+ - Subtracting 0.5 shifts the range to -0.5 to 0.5.
+ - The abs function makes this range 0.0 to 0.5, then back to 0.0 
+ as vUv.x goes from 0.0 to 1.0.
+
+- At vUv.x = 0.0 and vUv.x = 1.0, strength is 0.5. | white
+- At vUv.x = 0.5, strength is 0.0. | black
 
 
 ==================================================
 * Pattern-17
 ==================================================
+- 4 suqare | black and whute
 
+void main() {
+    float strength = min(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
 
 
 ==================================================
 * Pattern-18
 ==================================================
+- invert pattern-17
+
+void main() {
+    float strength = max(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
 
 
 
 ==================================================
 * Pattern-19
 ==================================================
+- a black square in the middle | like a frame with thick edges
+
+void main() {
+    float strength = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
 
 
 
 ==================================================
 * Pattern-20
+==================================================
+- a fram with thin edges
+
+void main() {
+    float strength = step(0.4, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+OR
+
+void main() {
+    float square1 = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+    float square2 = 1.0 - step(0.25, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+    float strength = square1 * square2;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+==================================================
+* Pattern-21
+==================================================
+
+
+==================================================
+* Pattern-22
+==================================================
+
+
+==================================================
+* Pattern-23
+==================================================
+
+
+==================================================
+* Pattern-24
+==================================================
+
+
+==================================================
+* Pattern-25
+==================================================
+
+
+==================================================
+* Pattern-26
+==================================================
+
+
+==================================================
+* Pattern-27
+==================================================
+
+
+==================================================
+* Pattern-28
+==================================================
+
+
+==================================================
+* Pattern-29
+==================================================
+
+
+==================================================
+* Pattern-30
 ==================================================
 
 
