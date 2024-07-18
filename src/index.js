@@ -5,8 +5,8 @@ I rely on comments to assess the code." */
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as THREE from 'three';
 import GUI from 'lil-gui';
-import testVertexShader from './shaders/test/vertex.glsl';
-import testFragmentShader from './shaders/test/fragment.glsl';
+import vertex from './shaders/test/vertex.glsl';
+import fragment from './shaders/test/fragment.glsl';
 
 const canvas = document.querySelector('canvas.webgl');
 const gui = new GUI();
@@ -21,8 +21,8 @@ const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
 
 //========== Material
 const material = new THREE.ShaderMaterial({
-  vertexShader: testVertexShader,
-  fragmentShader: testFragmentShader,
+  vertexShader: vertex,
+  fragmentShader: fragment,
   side: THREE.DoubleSide,
 });
 
