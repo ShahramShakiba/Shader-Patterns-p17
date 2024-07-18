@@ -1,13 +1,23 @@
 varying vec2 vUv;
 
 void main() {
-    float square1 = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
-    float square2 = 1.0 - step(0.25, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
-    float strength = square1 * square2;
+    vec2 lightUvX = vec2(
+        vUv.x * 0.1 + 0.45,
+        vUv.y * 0.5 + 0.25
+    );
+    float lightX = 0.015 / distance(lightUvX, vec2(0.5));
+   
+    vec2 lightUvY = vec2(
+        vUv.y * 0.1 + 0.45,
+        vUv.x * 0.5 + 0.25
+    );
+    float lightY = 0.015 / distance(lightUvY, vec2(0.5));
+
+
+    float strength = lightX * lightY;
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
-
 
 
 
@@ -76,7 +86,7 @@ void main() {
 ==================================================
 * Pattern-03
 ==================================================
-- left: black | right: white
+- left: black | right: white  | Gradient
 
 void main() {
     gl_FragColor = vec4(vUv.x, vUv.x, vUv.x, 1.0);
@@ -377,50 +387,270 @@ void main() {
 ==================================================
 * Pattern-21
 ==================================================
+- low level gradient | vertically
+
+void main() {
+    float strength = floor(vUv.x * 10.0) / 10.0;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+? floor : 
+  - get the lower value
+
 
 
 ==================================================
 * Pattern-22
 ==================================================
+- low level gradient | like a Grid network
+
+void main() {
+    float strength = 
+        floor(vUv.x * 10.0) / 10.0 * floor(vUv.y * 10.0) / 10.0;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
 
 
 ==================================================
 * Pattern-23
 ==================================================
+- Create a broken TV channel
+
+float random(vec2 st) {
+    return 
+        fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
+void main() {
+    float strength = random(vUv);
+        
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
 
 
 ==================================================
 * Pattern-24
 ==================================================
+- Grid network with randomness
+
+float random(vec2 st) {
+    return 
+        fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
+void main() {
+    vec2 gridUv = vec2(
+        floor(vUv.x * 10.0) / 10.0,
+        floor(vUv.y * 10.0) / 10.0
+    );
+
+    float strength = random(gridUv);
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
 
 
 ==================================================
 * Pattern-25
 ==================================================
+- Random grid network with offset
+
+float random(vec2 st) {
+    return 
+        fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
+void main() {
+    vec2 gridUv = vec2(
+        floor(vUv.x * 10.0) / 10.0,
+        floor(vUv.y * 10.0 + vUv * 5.0) / 10.0
+    );
+
+    float strength = random(gridUv);
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
 
 
 ==================================================
 * Pattern-26
 ==================================================
+- Length of UV
+
+void main() {
+    float strength = length(vUv);
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
 
 
 ==================================================
 * Pattern-27
 ==================================================
+- get length of UV in the center | dark point in the center
+
+void main() {
+    float strength = length(vUv - 0.5);
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+OR
+
+? distance between UV coordinate and a desire point
+void main() {
+    // float strength = distance(vUv, vec2(0.5));
+    float strength = distance(vUv, vec2(0.7, 0.3));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
 
 
 ==================================================
 * Pattern-28
 ==================================================
+- oposite of pattern 27 
+
+void main() {
+    float strength = 1.0 - distance(vUv, vec2(0.5));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
 
 
 ==================================================
 * Pattern-29
 ==================================================
+- Moon shape effect
+
+void main() {
+    float strength = 0.05 / distance(vUv, vec2(0.5));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+- with this light-point effect you never reaches 0 
+- it might be a problem in some situation you can see the edges of 
+  your plane
+
 
 
 ==================================================
 * Pattern-30
+==================================================
+- sttretch Moon
+
+void main() {
+    vec2 lightUv = vec2(
+        vUv.x * 0.1 + 0.45,
+        vUv.y * 0.5 + 0.25
+    );
+
+    float strength = 0.015 / distance(lightUv, vec2(0.5));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-31
+==================================================
+- Star 
+
+void main() {
+    vec2 lightUvX = vec2(
+        vUv.x * 0.1 + 0.45,
+        vUv.y * 0.5 + 0.25
+    );
+    float lightX = 0.015 / distance(lightUvX, vec2(0.5));
+   
+    vec2 lightUvY = vec2(
+        vUv.y * 0.1 + 0.45,
+        vUv.x * 0.5 + 0.25
+    );
+    float lightY = 0.015 / distance(lightUvY, vec2(0.5));
+
+
+    float strength = lightX * lightY;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-32
+==================================================
+
+
+==================================================
+* Pattern-33
+==================================================
+
+
+==================================================
+* Pattern-34
+==================================================
+
+
+==================================================
+* Pattern-35
+==================================================
+
+
+==================================================
+* Pattern-36
+==================================================
+
+
+==================================================
+* Pattern-37
+==================================================
+
+
+==================================================
+* Pattern-38
+==================================================
+
+
+==================================================
+* Pattern-39
+==================================================
+
+
+==================================================
+* Pattern-40
+==================================================
+
+
+==================================================
+* Pattern-41
+==================================================
+
+
+==================================================
+* Pattern-42
+==================================================
+
+
+==================================================
+* Pattern-43
+==================================================
+
+
+==================================================
+* Pattern-44
 ==================================================
 
 
