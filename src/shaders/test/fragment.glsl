@@ -1,18 +1,8 @@
 varying vec2 vUv;
 
 void main() {
-    vec2 wavedUv = vec2(
-        vUv.x + sin(vUv.y * 30.0) * 0.1,
-        vUv.y + sin(vUv.x * 30.0) * 0.1
-    );
-
-    float strength = 
-        1.0 - step(0.015, abs(distance(wavedUv, vec2(0.5)) - 0.25));
-
-    gl_FragColor = vec4(strength, strength, strength, 1.0);
+    gl_FragColor = vec4(vUv.x, vUv.x, vUv.x, 1.0);
 }
-
-
 
 /*
 ==================================================
@@ -129,6 +119,7 @@ void main() {
 }
 
 
+* The mod() function thus creates a repeating sequence from 0 to 1.
 
 ? mod(x, y) :  modulus (remainder) after division
     - The mod(x, y) function returns the remainder of x divided by y.
@@ -707,34 +698,512 @@ void main() {
 
 
 ==================================================
-* Pattern-39 | 
+* Pattern-39 | sound waves - sense of movement and balance
 ==================================================
+varying vec2 vUv;
 
+void main() {
+    vec2 wavedUv = vec2(
+        vUv.x + sin(vUv.y * 100.0) * 0.1,
+        vUv.y + sin(vUv.x * 100.0) * 0.1
+    );
 
-==================================================
-* Pattern-40 | 
-==================================================
+    float strength = 
+        1.0 - step(0.015, abs(distance(wavedUv, vec2(0.5)) - 0.25));
 
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
 
-==================================================
-* Pattern-41 | 
-==================================================
-
-
-==================================================
-* Pattern-42 | 
-==================================================
-
-
-==================================================
-* Pattern-43 | 
-==================================================
 
 
 ==================================================
-* Pattern-44 | 
+* Pattern-40 | Angle
 ==================================================
+varying vec2 vUv;
+
+void main() {
+    float angle = atan(vUv.x, vUv.y);
+    float strength = angle;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+? atan(vUv.y, vUv.x) :
+     computes the angle (in radians) between the positive x-axis and the point (vUv.x, vUv.y), effectively converting Cartesian coordinates to polar coordinates.
 
 
 
+==================================================
+* Pattern-41 | pattern40 starts from the center
+==================================================
+varying vec2 vUv;
+
+void main() {
+    float angle = atan(vUv.x - 0.5, vUv.y - 0.5);
+    float strength = angle;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-42 | The gradient transitions from black to white, converging at a point near the center of the bottom edge
+==================================================
+#define PI 3.1415926535897932384626433832795
+
+varying vec2 vUv;
+
+void main() {
+    float angle = atan(vUv.x - 0.5, vUv.y - 0.5);
+    angle /= PI * 2.0;
+    angle += 0.5;
+    float strength = angle;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-43 | alternating dark and light triangles converging towards a central point
+==================================================
+#define PI 3.1415926535897932384626433832795
+
+varying vec2 vUv;
+
+void main() {
+    float angle = atan(vUv.x - 0.5, vUv.y - 0.5);
+    angle /= PI * 2.0;
+    angle += 0.5;
+    angle *= 20.0;
+    angle = mod(angle, 1.0);
+    float strength = angle;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-44 | central point from which white rays radiate outward against a black background
+==================================================
+#define PI 3.1415926535897932384626433832795
+
+varying vec2 vUv;
+
+void main() {
+    float angle = atan(vUv.x - 0.5, vUv.y - 0.5);
+    angle /= PI * 2.0;
+    angle += 0.5;
+    float strength = sin(angle * 100.0);
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-45 | Wavy Circle Outline
+==================================================
+#define PI 3.1415926535897932384626433832795
+
+varying vec2 vUv;
+
+void main() {
+    float angle = atan(vUv.x - 0.5, vUv.y - 0.5);
+    angle /= PI * 2.0;
+    angle += 0.5;
+    float sinusoid = sin(angle * 100.0);
+   
+    float radius = 0.3 + sinusoid * 0.02;
+    float strength = 1.0 - step(0.015, abs(distance(vUv, vec2(0.5)) - radius));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+? sinusoid :
+    The term "sinusoid" is commonly used to describe a waveform that follows the shape of a sine wave
+
+
+==================================================
+* | Pattern-46 | 
+* Perlin moise: can recreate nature shapes like "clouds", "water", "fire", "terrain elevation" but it can also be used to animate the grass or snow moving in the wind
+==================================================
+//	Classic Perlin 2D Noise 
+//	by Stefan Gustavson (https://github.com/stegu/webgl-noise)
+vec2 fade(vec2 t) {
+    return t*t*t*(t*(t*6.0-15.0)+10.0);
+}
+
+vec4 permute(vec4 x) {
+    return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+float cnoise(vec2 P) {
+  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
+  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
+  Pi = mod(Pi, 289.0); // To avoid truncation effects in permutation
+
+  vec4 ix = Pi.xzxz;
+  vec4 iy = Pi.yyww;
+  vec4 fx = Pf.xzxz;
+  vec4 fy = Pf.yyww;
+  vec4 i = permute(permute(ix) + iy);
+
+  vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0; // 1/41 = 0.024...
+  vec4 gy = abs(gx) - 0.5;
+  vec4 tx = floor(gx + 0.5);
+  gx = gx - tx;
+  vec2 g00 = vec2(gx.x, gy.x);
+  vec2 g10 = vec2(gx.y, gy.y);
+  vec2 g01 = vec2(gx.z, gy.z);
+  vec2 g11 = vec2(gx.w, gy.w);
+
+  vec4 norm = 1.79284291400159 - 0.85373472095314 * 
+    vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
+  g00 *= norm.x;
+  g01 *= norm.y;
+  g10 *= norm.z;
+  g11 *= norm.w;
+  float n00 = dot(g00, vec2(fx.x, fy.x));
+  float n10 = dot(g10, vec2(fx.y, fy.y));
+  float n01 = dot(g01, vec2(fx.z, fy.z));
+  float n11 = dot(g11, vec2(fx.w, fy.w));
+
+  vec2 fade_xy = fade(Pf.xy);
+  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+
+  return 2.3 * n_xy;
+}
+
+varying vec2 vUv;
+
+void main() {
+    float strength = cnoise(vUv * 10.0);
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+? you can get "cnoise" function from :
+https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83
+
+
+
+
+==================================================
+* Pattern-47 | Sharp Perlin moise
+==================================================
+//	Classic Perlin 2D Noise 
+//	by Stefan Gustavson (https://github.com/stegu/webgl-noise)
+vec2 fade(vec2 t) {
+    return t*t*t*(t*(t*6.0-15.0)+10.0);
+}
+
+vec4 permute(vec4 x) {
+    return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+float cnoise(vec2 P) {
+  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
+  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
+  Pi = mod(Pi, 289.0); // To avoid truncation effects in permutation
+
+  vec4 ix = Pi.xzxz;
+  vec4 iy = Pi.yyww;
+  vec4 fx = Pf.xzxz;
+  vec4 fy = Pf.yyww;
+  vec4 i = permute(permute(ix) + iy);
+
+  vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0; // 1/41 = 0.024...
+  vec4 gy = abs(gx) - 0.5;
+  vec4 tx = floor(gx + 0.5);
+  gx = gx - tx;
+  vec2 g00 = vec2(gx.x, gy.x);
+  vec2 g10 = vec2(gx.y, gy.y);
+  vec2 g01 = vec2(gx.z, gy.z);
+  vec2 g11 = vec2(gx.w, gy.w);
+
+  vec4 norm = 1.79284291400159 - 0.85373472095314 * 
+    vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
+  g00 *= norm.x;
+  g01 *= norm.y;
+  g10 *= norm.z;
+  g11 *= norm.w;
+  float n00 = dot(g00, vec2(fx.x, fy.x));
+  float n10 = dot(g10, vec2(fx.y, fy.y));
+  float n01 = dot(g01, vec2(fx.z, fy.z));
+  float n11 = dot(g11, vec2(fx.w, fy.w));
+
+  vec2 fade_xy = fade(Pf.xy);
+  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+
+  return 2.3 * n_xy;
+}
+
+varying vec2 vUv;
+
+void main() {
+    float strength = step(0.0, cnoise(vUv * 10.0));
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+
+==================================================
+* Pattern-48 | Perlin noise - topographic maps or fluid dynamics visualizations
+==================================================
+//	Classic Perlin 2D Noise 
+//	by Stefan Gustavson (https://github.com/stegu/webgl-noise)
+vec2 fade(vec2 t) {
+    return t*t*t*(t*(t*6.0-15.0)+10.0);
+}
+
+vec4 permute(vec4 x) {
+    return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+float cnoise(vec2 P) {
+  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
+  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
+  Pi = mod(Pi, 289.0); // To avoid truncation effects in permutation
+
+  vec4 ix = Pi.xzxz;
+  vec4 iy = Pi.yyww;
+  vec4 fx = Pf.xzxz;
+  vec4 fy = Pf.yyww;
+  vec4 i = permute(permute(ix) + iy);
+
+  vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0; // 1/41 = 0.024...
+  vec4 gy = abs(gx) - 0.5;
+  vec4 tx = floor(gx + 0.5);
+  gx = gx - tx;
+  vec2 g00 = vec2(gx.x, gy.x);
+  vec2 g10 = vec2(gx.y, gy.y);
+  vec2 g01 = vec2(gx.z, gy.z);
+  vec2 g11 = vec2(gx.w, gy.w);
+
+  vec4 norm = 1.79284291400159 - 0.85373472095314 * 
+    vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
+  g00 *= norm.x;
+  g01 *= norm.y;
+  g10 *= norm.z;
+  g11 *= norm.w;
+  float n00 = dot(g00, vec2(fx.x, fy.x));
+  float n10 = dot(g10, vec2(fx.y, fy.y));
+  float n01 = dot(g01, vec2(fx.z, fy.z));
+  float n11 = dot(g11, vec2(fx.w, fy.w));
+
+  vec2 fade_xy = fade(Pf.xy);
+  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+
+  return 2.3 * n_xy;
+}
+
+varying vec2 vUv;
+
+void main() {
+    float strength = 1.0 - abs(cnoise(vUv * 10.0));
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+
+==================================================
+* Pattern-49 | Gradient Perlin moise
+==================================================
+//	Classic Perlin 2D Noise 
+//	by Stefan Gustavson (https://github.com/stegu/webgl-noise)
+vec2 fade(vec2 t) {
+    return t*t*t*(t*(t*6.0-15.0)+10.0);
+}
+
+vec4 permute(vec4 x) {
+    return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+float cnoise(vec2 P) {
+  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
+  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
+  Pi = mod(Pi, 289.0); // To avoid truncation effects in permutation
+
+  vec4 ix = Pi.xzxz;
+  vec4 iy = Pi.yyww;
+  vec4 fx = Pf.xzxz;
+  vec4 fy = Pf.yyww;
+  vec4 i = permute(permute(ix) + iy);
+
+  vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0; // 1/41 = 0.024...
+  vec4 gy = abs(gx) - 0.5;
+  vec4 tx = floor(gx + 0.5);
+  gx = gx - tx;
+  vec2 g00 = vec2(gx.x, gy.x);
+  vec2 g10 = vec2(gx.y, gy.y);
+  vec2 g01 = vec2(gx.z, gy.z);
+  vec2 g11 = vec2(gx.w, gy.w);
+
+  vec4 norm = 1.79284291400159 - 0.85373472095314 * 
+    vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
+  g00 *= norm.x;
+  g01 *= norm.y;
+  g10 *= norm.z;
+  g11 *= norm.w;
+  float n00 = dot(g00, vec2(fx.x, fy.x));
+  float n10 = dot(g10, vec2(fx.y, fy.y));
+  float n01 = dot(g01, vec2(fx.z, fy.z));
+  float n11 = dot(g11, vec2(fx.w, fy.w));
+
+  vec2 fade_xy = fade(Pf.xy);
+  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+
+  return 2.3 * n_xy;
+}
+
+varying vec2 vUv;
+
+void main() {
+    float strength = sin(cnoise(vUv * 10.0) * 20.0);
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+==================================================
+* Pattern-50 | Sharp Perlin moise
+==================================================
+//	Classic Perlin 2D Noise 
+//	by Stefan Gustavson (https://github.com/stegu/webgl-noise)
+vec2 fade(vec2 t) {
+    return t*t*t*(t*(t*6.0-15.0)+10.0);
+}
+
+vec4 permute(vec4 x) {
+    return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+float cnoise(vec2 P) {
+  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
+  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
+  Pi = mod(Pi, 289.0); // To avoid truncation effects in permutation
+
+  vec4 ix = Pi.xzxz;
+  vec4 iy = Pi.yyww;
+  vec4 fx = Pf.xzxz;
+  vec4 fy = Pf.yyww;
+  vec4 i = permute(permute(ix) + iy);
+
+  vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0; // 1/41 = 0.024...
+  vec4 gy = abs(gx) - 0.5;
+  vec4 tx = floor(gx + 0.5);
+  gx = gx - tx;
+  vec2 g00 = vec2(gx.x, gy.x);
+  vec2 g10 = vec2(gx.y, gy.y);
+  vec2 g01 = vec2(gx.z, gy.z);
+  vec2 g11 = vec2(gx.w, gy.w);
+
+  vec4 norm = 1.79284291400159 - 0.85373472095314 * 
+    vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
+  g00 *= norm.x;
+  g01 *= norm.y;
+  g10 *= norm.z;
+  g11 *= norm.w;
+  float n00 = dot(g00, vec2(fx.x, fy.x));
+  float n10 = dot(g10, vec2(fx.y, fy.y));
+  float n01 = dot(g01, vec2(fx.z, fy.z));
+  float n11 = dot(g11, vec2(fx.w, fy.w));
+
+  vec2 fade_xy = fade(Pf.xy);
+  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+
+  return 2.3 * n_xy;
+}
+
+varying vec2 vUv;
+
+void main() {
+    float strength = step(0.9, sin(cnoise(vUv * 10.0) * 20.0));
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+==================================================
+* Pattern-51 | Color Version, now we can add color to all patterns
+==================================================
+//	Classic Perlin 2D Noise 
+//	by Stefan Gustavson (https://github.com/stegu/webgl-noise)
+vec2 fade(vec2 t) {
+    return t*t*t*(t*(t*6.0-15.0)+10.0);
+}
+
+vec4 permute(vec4 x) {
+    return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+float cnoise(vec2 P) {
+  vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
+  vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
+  Pi = mod(Pi, 289.0); // To avoid truncation effects in permutation
+
+  vec4 ix = Pi.xzxz;
+  vec4 iy = Pi.yyww;
+  vec4 fx = Pf.xzxz;
+  vec4 fy = Pf.yyww;
+  vec4 i = permute(permute(ix) + iy);
+
+  vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0; // 1/41 = 0.024...
+  vec4 gy = abs(gx) - 0.5;
+  vec4 tx = floor(gx + 0.5);
+  gx = gx - tx;
+  vec2 g00 = vec2(gx.x, gy.x);
+  vec2 g10 = vec2(gx.y, gy.y);
+  vec2 g01 = vec2(gx.z, gy.z);
+  vec2 g11 = vec2(gx.w, gy.w);
+
+  vec4 norm = 1.79284291400159 - 0.85373472095314 * 
+    vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
+  g00 *= norm.x;
+  g01 *= norm.y;
+  g10 *= norm.z;
+  g11 *= norm.w;
+  float n00 = dot(g00, vec2(fx.x, fy.x));
+  float n10 = dot(g10, vec2(fx.y, fy.y));
+  float n01 = dot(g01, vec2(fx.z, fy.z));
+  float n11 = dot(g11, vec2(fx.w, fy.w));
+
+  vec2 fade_xy = fade(Pf.xy);
+  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+  float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+
+  return 2.3 * n_xy;
+}
+
+varying vec2 vUv;
+
+void main() {
+    float strength = step(0.9, sin(cnoise(vUv * 10.0) * 20.0));
+
+    // Clamp the strength
+    strength = clamp(strength, 0.0, 1.0);
+
+    // colored version
+    vec3 blackColor = vec3(0.0);
+    vec3 uvColor = vec3(vUv, 1.0);
+    vec3 mixedColor = mix(blackColor, uvColor, strength);
+    gl_FragColor = vec4(mixedColor, 1.0);
+
+    // // black and white version
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+? clamp(x, minVal, maxVal)
+    - x is the value to be clamped.
+    - minVal is the minimum value that x can be.
+    - maxVal is the maximum value that x can be.
 */
