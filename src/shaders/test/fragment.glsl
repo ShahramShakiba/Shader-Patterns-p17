@@ -21,33 +21,19 @@ void main() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
+==================================================
 * Pattern-01
-
+==================================================
 varying vec2 vUv;
+
 void main() {
     // gl_FragColor = vec4(0.5, 0.0, 1.0, 1.0);
-
     gl_FragColor = vec4(vUv, 1.0, 1.0);
 }
 
-? How the Gradient is Created
+
+? How the Gradient is Created :
 vUv contains two components: vUv.x and vUv.y.
 These components are used as the "red" and "green" components of the color, respectively.
 
@@ -57,8 +43,7 @@ vec4(vUv, 1.0, 1.0) translates to vec4(vUv.x, vUv.y, 1.0, 1.0).
   - The blue component is set to 1.0, making it full blue.
   - The alpha component is set to 1.0, making it fully opaque.
 
-
-? Visual Effect
+? Visual Effect :
 As a result, the color of each pixel is determined by its UV coordinates.
     - At (0, 0), the color is vec4(0.0, 0.0, 1.0, 1.0) (blue).
     - At (1, 0), the color is vec4(1.0, 0.0, 1.0, 1.0) (magenta).
@@ -70,13 +55,16 @@ The gradient effect is created because the red and green components linearly int
 
 
 ==================================================
-* Pattern-02
+* Pattern-02 | UV Coordinates
 ==================================================
+varying vec2 vUv;
+
 void main() {
     gl_FragColor = vec4(vUv.x, vUv.y, 0.0, 1.0);
 }
 
-? Visual Effect
+
+? Visual Effect :
   - At (0, 0), the color is vec4(0.0, 0.0, 0.0, 1.0) (black).
   - At (1, 0), the color is vec4(1.0, 0.0, 0.0, 1.0) (red).
   - At (0, 1), the color is vec4(0.0, 1.0, 0.0, 1.0) (green).
@@ -84,9 +72,9 @@ void main() {
 
 
 ==================================================
-* Pattern-03
+* Pattern-03 | Gradient: left: black - right: white  
 ==================================================
-- left: black | right: white  | Gradient
+varying vec2 vUv;
 
 void main() {
     gl_FragColor = vec4(vUv.x, vUv.x, vUv.x, 1.0);
@@ -101,9 +89,9 @@ void main() {
 
 
 ==================================================
-* Pattern-04
+* Pattern-04 | top: white | bottom: black
 ==================================================
-- top: white | bottom: black
+varying vec2 vUv;
 
 void main() {
     float strength = vUv.y;
@@ -113,9 +101,9 @@ void main() {
 
 
 ==================================================
-* Pattern-05
+* Pattern-05 | top: black - bottom: white
 ==================================================
-- top: black | bottom: white
+varying vec2 vUv;
 
 void main() {
     float strength = 1.0 - vUv.y;
@@ -125,9 +113,9 @@ void main() {
 
 
 ==================================================
-* Pattern-06
+* Pattern-06 | 10%: black - 90%: white
 ==================================================
-- 10%: black | 90%: white
+varying vec2 vUv;
 
 void main() {
     float strength = vUv.y / 0.1;
@@ -137,9 +125,9 @@ void main() {
 
 
 ==================================================
-* Pattern-07
+* Pattern-07 | Stripe Effect
 ==================================================
-- Repeating pattern of the pattern-06 | Stripe Effect
+varying vec2 vUv;
 
 void main() {
     float strength = mod(vUv.y / 0.1, 1.0);
@@ -148,11 +136,12 @@ void main() {
 }
 
 
-? mod(x, y):  modulus (remainder) after division
+
+? mod(x, y) :  modulus (remainder) after division
     - The mod(x, y) function returns the remainder of x divided by y.
     - For example, mod(5.5, 1.0) returns 0.5 because 5.5 divided by 1.0 leaves a remainder of 0.5.
 
-? Stripe Effect
+? Stripe Effect :
     - The stripes are horizontal because the calculation uses vUv.y.
     - Each stripe is 0.1 units tall in UV coordinates.
     - The resulting visual effect is a series of horizontal bands that vary in grayscale intensity from black to white, repeating every 0.1 units along the vertical axis.
@@ -160,9 +149,9 @@ void main() {
 
 
 ==================================================
-* Pattern-08
+* Pattern-08 | Sharp Stripe Effect
 ==================================================
-- Sharp Stripe Effect
+varying vec2 vUv;
 
 void main() {
     float strength = mod(vUv.y / 0.1, 1.0);
@@ -173,17 +162,17 @@ void main() {
         strength = 1.0;
     }
 
-    // strength = strength < 0.5 ? 0.0 : 1.0;
-
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
 
-- do not use if-else statment or tarnary operator because they can impact performance, if you can avoid doing "if-else" or " tarnary"
+! do not use if-else statment or tarnary operator because they can impact performance, if you can avoid doing "if-else" or " tarnary"
 
 INSTEAD USE : 
 
-? step()
+? step() :
     - when it reaches a limit, it'll be 1 and before that 0
+
+varying vec2 vUv;
 
 void main() {
     float strength = mod(vUv.y / 0.1, 1.0);
@@ -197,9 +186,9 @@ void main() {
 
 
 ==================================================
-* Pattern-09
+* Pattern-09 | Sharp Stripe Effect but narrow & horizontally
 ==================================================
-- Sharp Stripe Effect but narrow & horizontally
+varying vec2 vUv;
 
 void main() {
     float strength = mod(vUv.y / 0.1, 1.0);
@@ -211,9 +200,9 @@ void main() {
 
 
 ==================================================
-* Pattern-10
+* Pattern-10 | Sharp Stripe Effect but narrow & vertically
 ==================================================
-- Sharp Stripe Effect but narrow & vertically
+varying vec2 vUv;
 
 void main() {
     float strength = mod(vUv.x / 0.1, 1.0);
@@ -225,9 +214,9 @@ void main() {
 
 
 ==================================================
-* Pattern-11
+* Pattern-11 | Strip Effect like a chess board
 ==================================================
-- Strip Effect like a chest board
+varying vec2 vUv;
 
 void main() {
     float strength = step(0.8, mod(vUv.x / 0.1, 1.0));
@@ -239,9 +228,9 @@ void main() {
 
 
 ==================================================
-* Pattern-12
+* Pattern-12 | Plane with lots of dots
 ==================================================
-- a plane with lots of dots
+varying vec2 vUv;
 
 void main() {
     float strength = step(0.8, mod(vUv.x / 0.1, 1.0));
@@ -253,9 +242,9 @@ void main() {
 
 
 ==================================================
-* Pattern-13
+* Pattern-13 | Plane with lots of bars
 ==================================================
-- a plane with lots of wide-dots | bars
+varying vec2 vUv;
 
 void main() {
     float strength = step(0.4, mod(vUv.x / 0.1, 1.0));
@@ -267,9 +256,10 @@ void main() {
 
 
 ==================================================
-* Pattern-14
+* Pattern-14 | Two bars on the right and top, stick to each other
 ==================================================
-- two bars on the right & top stick to each other
+varying vec2 vUv;
+
 void main() {
     float barX = step(0.4, mod(vUv.x / 0.1, 1.0));
     barX *= step(0.8, mod(vUv.y / 0.1, 1.0));
@@ -284,9 +274,9 @@ void main() {
 
 
 ==================================================
-* Pattern-15
+* Pattern-15 | Bunch of plus sign
 ==================================================
-- bunch of plus mark
+varying vec2 vUv;
 
 void main() {
     float barX = step(0.4, mod(vUv.x / 0.1, 1.0));
@@ -302,9 +292,9 @@ void main() {
 
 
 ==================================================
-* Pattern-16
+* Pattern-16 | left and right: white - center: black
 ==================================================
-- left and right: white | center: black
+varying vec2 vUv;
 
 void main() {
     float strength = abs(vUv.x - 0.5);
@@ -312,7 +302,8 @@ void main() {
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
 
-? abs() function:
+
+? abs() function :
     - returns the absolute value of x.
     - For example, abs(-0.5) returns 0.5 and abs(0.5) returns 0.5.
 
@@ -326,9 +317,9 @@ void main() {
 
 
 ==================================================
-* Pattern-17
+* Pattern-17 | 4 suqare - black and white
 ==================================================
-- 4 suqare | black and whute
+varying vec2 vUv;
 
 void main() {
     float strength = min(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
@@ -338,9 +329,9 @@ void main() {
 
 
 ==================================================
-* Pattern-18
+* Pattern-18 | Invert pattern-17
 ==================================================
-- invert pattern-17
+varying vec2 vUv;
 
 void main() {
     float strength = max(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
@@ -351,9 +342,9 @@ void main() {
 
 
 ==================================================
-* Pattern-19
+* Pattern-19 | black square in the middle - like a frame with thick edges
 ==================================================
-- a black square in the middle | like a frame with thick edges
+varying vec2 vUv;
 
 void main() {
     float strength = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
@@ -364,9 +355,9 @@ void main() {
 
 
 ==================================================
-* Pattern-20
+* Pattern-20 | Frame with thin edges
 ==================================================
-- a fram with thin edges
+varying vec2 vUv;
 
 void main() {
     float strength = step(0.4, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
@@ -374,7 +365,9 @@ void main() {
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
 
+
 OR
+
 
 void main() {
     float square1 = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
@@ -384,10 +377,12 @@ void main() {
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
 
+
+
 ==================================================
-* Pattern-21
+* Pattern-21 | low level gradient - vertically
 ==================================================
-- low level gradient | vertically
+varying vec2 vUv;
 
 void main() {
     float strength = floor(vUv.x * 10.0) / 10.0;
@@ -395,15 +390,16 @@ void main() {
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
 
+
 ? floor : 
   - get the lower value
 
 
 
 ==================================================
-* Pattern-22
+* Pattern-22 | low level gradient - like a Grid network
 ==================================================
-- low level gradient | like a Grid network
+varying vec2 vUv;
 
 void main() {
     float strength = 
@@ -415,9 +411,9 @@ void main() {
 
 
 ==================================================
-* Pattern-23
+* Pattern-23 | A broken TV channel
 ==================================================
-- Create a broken TV channel
+varying vec2 vUv;
 
 float random(vec2 st) {
     return 
@@ -433,9 +429,9 @@ void main() {
 
 
 ==================================================
-* Pattern-24
+* Pattern-24 | Grid network with randomness
 ==================================================
-- Grid network with randomness
+varying vec2 vUv;
 
 float random(vec2 st) {
     return 
@@ -456,9 +452,9 @@ void main() {
 
 
 ==================================================
-* Pattern-25
+* Pattern-25 | Random grid network with offset
 ==================================================
-- Random grid network with offset
+varying vec2 vUv;
 
 float random(vec2 st) {
     return 
@@ -479,9 +475,9 @@ void main() {
 
 
 ==================================================
-* Pattern-26
+* Pattern-26 | - Length of UV
 ==================================================
-- Length of UV
+varying vec2 vUv;
 
 void main() {
     float strength = length(vUv);
@@ -492,9 +488,10 @@ void main() {
 
 
 ==================================================
-* Pattern-27
+* Pattern-27 | get length of UV in center - dark point in the center
+
 ==================================================
-- get length of UV in the center | dark point in the center
+varying vec2 vUv;
 
 void main() {
     float strength = length(vUv - 0.5);
@@ -505,9 +502,10 @@ void main() {
 
 OR
 
+
 ? distance between UV coordinate and a desire point
+
 void main() {
-    // float strength = distance(vUv, vec2(0.5));
     float strength = distance(vUv, vec2(0.7, 0.3));
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
@@ -516,9 +514,9 @@ void main() {
 
 
 ==================================================
-* Pattern-28
+* Pattern-28 | opposite of 27
 ==================================================
-- oposite of pattern 27 
+varying vec2 vUv;
 
 void main() {
     float strength = 1.0 - distance(vUv, vec2(0.5));
@@ -529,9 +527,9 @@ void main() {
 
 
 ==================================================
-* Pattern-29
+* Pattern-29 | Moon Shape Effect
 ==================================================
-- Moon shape effect
+varying vec2 vUv;
 
 void main() {
     float strength = 0.05 / distance(vUv, vec2(0.5));
@@ -546,9 +544,9 @@ void main() {
 
 
 ==================================================
-* Pattern-30
+* Pattern-30 | Stretch Moon
 ==================================================
-- sttretch Moon
+varying vec2 vUv;
 
 void main() {
     vec2 lightUv = vec2(
@@ -564,9 +562,9 @@ void main() {
 
 
 ==================================================
-* Pattern-31
+* Pattern-31 | Star
 ==================================================
-- Star 
+varying vec2 vUv;
 
 void main() {
     vec2 lightUvX = vec2(
