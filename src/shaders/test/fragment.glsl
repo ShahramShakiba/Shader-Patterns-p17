@@ -1,20 +1,13 @@
 varying vec2 vUv;
 
 void main() {
-    vec2 lightUvX = vec2(
-        vUv.x * 0.1 + 0.45,
-        vUv.y * 0.5 + 0.25
+    vec2 wavedUv = vec2(
+        vUv.x + sin(vUv.y * 30.0) * 0.1,
+        vUv.y + sin(vUv.x * 30.0) * 0.1
     );
-    float lightX = 0.015 / distance(lightUvX, vec2(0.5));
-   
-    vec2 lightUvY = vec2(
-        vUv.y * 0.1 + 0.45,
-        vUv.x * 0.5 + 0.25
-    );
-    float lightY = 0.015 / distance(lightUvY, vec2(0.5));
 
-
-    float strength = lightX * lightY;
+    float strength = 
+        1.0 - step(0.015, abs(distance(wavedUv, vec2(0.5)) - 0.25));
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
@@ -588,67 +581,158 @@ void main() {
 
 
 ==================================================
-* Pattern-32
+* Pattern-32 | Star but rotating by one quarter of PI
+==================================================
+#define PI 3.1415926535897932384626433832795
+
+varying vec2 vUv;
+
+vec2 rotate(vec2 uv, float rotation, vec2 mid) {
+    return vec2(
+        cos(rotation) * (uv.x - mid.x) + sin(rotation) * (uv.y - mid.y) + mid.x,
+        cos(rotation) * (uv.y - mid.y) - sin(rotation) * (uv.x - mid.x) + mid.y
+    );
+}
+
+void main() {
+    vec2 rotateUv = rotate(vUv, PI / 4.0, vec2(0.5));
+
+    vec2 lightUvX = vec2(
+        rotateUv.x * 0.1 + 0.45,
+        rotateUv.y * 0.5 + 0.25
+    );
+    float lightX = 0.015 / distance(lightUvX, vec2(0.5));
+   
+    vec2 lightUvY = vec2(
+        rotateUv.y * 0.1 + 0.45,
+        rotateUv.x * 0.5 + 0.25
+    );
+    float lightY = 0.015 / distance(lightUvY, vec2(0.5));
+
+
+    float strength = lightX * lightY;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-33 | Big black circle in the center 
+==================================================
+varying vec2 vUv;
+
+void main() {
+    float strength = step(0.3, distance(vUv, vec2(0.5)));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-34 | Two faded circle
+==================================================
+varying vec2 vUv;
+
+void main() {
+    float strength = abs(distance(vUv, vec2(0.5)) - 0.3);
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-35 | Black circle
+==================================================
+varying vec2 vUv;
+
+void main() {
+    float strength = step(0.015, abs(distance(vUv, vec2(0.5)) - 0.3));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-36 | White Circle
+==================================================
+varying vec2 vUv;
+
+void main() {
+    float strength = 1.0 - step(0.015, abs(distance(vUv, vec2(0.5)) - 0.3));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-37 | Spooky circle
+==================================================
+varying vec2 vUv;
+
+void main() {
+    vec2 wavedUv = vec2(
+        vUv.x,
+        vUv.y + sin(vUv.x * 30.0) * 0.1
+    );
+
+    float strength = 1.0 - step(0.015, abs(distance(wavedUv, vec2(0.5)) - 0.3));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-38 | Strange shape like spilled liquid
+==================================================
+varying vec2 vUv;
+
+void main() {
+    vec2 wavedUv = vec2(
+        vUv.x + sin(vUv.y * 30.0) * 0.1,
+        vUv.y + sin(vUv.x * 30.0) * 0.1
+    );
+
+    float strength = 
+        1.0 - step(0.015, abs(distance(wavedUv, vec2(0.5)) - 0.25));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-39 | 
 ==================================================
 
 
 ==================================================
-* Pattern-33
+* Pattern-40 | 
 ==================================================
 
 
 ==================================================
-* Pattern-34
+* Pattern-41 | 
 ==================================================
 
 
 ==================================================
-* Pattern-35
+* Pattern-42 | 
 ==================================================
 
 
 ==================================================
-* Pattern-36
+* Pattern-43 | 
 ==================================================
 
 
 ==================================================
-* Pattern-37
-==================================================
-
-
-==================================================
-* Pattern-38
-==================================================
-
-
-==================================================
-* Pattern-39
-==================================================
-
-
-==================================================
-* Pattern-40
-==================================================
-
-
-==================================================
-* Pattern-41
-==================================================
-
-
-==================================================
-* Pattern-42
-==================================================
-
-
-==================================================
-* Pattern-43
-==================================================
-
-
-==================================================
-* Pattern-44
+* Pattern-44 | 
 ==================================================
 
 
