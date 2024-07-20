@@ -1,11 +1,10 @@
 varying vec2 vUv;
 
 void main() {
-    float strength = step(0.8, mod(vUv.x / 0.1, 1.0));
+    float strength = step(0.4, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
 
-    gl_FragColor = vec4(strength, strength, strength, 1.0); 
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
-
 
 
 /*
@@ -221,21 +220,29 @@ void main() {
 * Pattern-11 | Strip Effect like a chess board
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = step(0.8, mod(vUv.x / 0.1, 1.0));
     strength += step(0.8, mod(vUv.y / 0.1, 1.0));
 
-    gl_FragColor = vec4(strength, strength, strength, 1.0);
+    strength = clamp(strength, 0.0, 1.0);
+
+    vec3 blackColor = vec3(0.0);
+    vec3 uvColor = vec3(vUv, 1.0);
+    vec3 mixedColor = mix(blackColor, uvColor, strength);
+
+    gl_FragColor = vec4(mixedColor, 1.0); 
 }
 
+? clamp() : 
+    - without clamp you'll notice wierd bugs, like in some part color is not interpolated
+
+    - By clamping strength, you ensure that the "mix" function always receives a valid interpolation factor, resulting in a predictable and correct output color.
 
 
 ==================================================
 * Pattern-12 | Plane with lots of dots
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = step(0.8, mod(vUv.x / 0.1, 1.0));
     strength *= step(0.8, mod(vUv.y / 0.1, 1.0));
@@ -249,7 +256,6 @@ void main() {
 * Pattern-13 | Plane with lots of bars
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = step(0.4, mod(vUv.x / 0.1, 1.0));
     strength *= step(0.8, mod(vUv.y / 0.1, 1.0));
@@ -258,12 +264,10 @@ void main() {
 }
 
 
-
 ==================================================
 * Pattern-14 | Two bars on the right and top, stick to each other
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float barX = step(0.4, mod(vUv.x / 0.1, 1.0));
     barX *= step(0.8, mod(vUv.y / 0.1, 1.0));
@@ -276,12 +280,26 @@ void main() {
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
 
+OR
+
+
+void main() {
+    float modX = mod(vUv.x / 0.1, 1.0);
+    float modY = mod(vUv.y / 0.1, 1.0);
+
+    float barX = step(0.5, modX) * step(0.8, modY);
+    float barY = step(0.8, modX) * step(0.5, modY);
+
+    float strength = barX + barY;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
 
 ==================================================
 * Pattern-15 | Bunch of plus sign
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float barX = step(0.4, mod(vUv.x / 0.1, 1.0));
     barX *= step(0.8, mod(vUv.y / 0.1, 1.0));
@@ -299,7 +317,6 @@ void main() {
 * Pattern-16 | left and right: white - center: black
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = abs(vUv.x - 0.5);
 
@@ -314,7 +331,7 @@ void main() {
  - vUv.x varies from 0.0 to 1.0 across the horizontal axis.
  - Subtracting 0.5 shifts the range to -0.5 to 0.5.
  - The abs function makes this range 0.0 to 0.5, then back to 0.0 
- as vUv.x goes from 0.0 to 1.0.
+ again
 
 - At vUv.x = 0.0 and vUv.x = 1.0, strength is 0.5. | white
 - At vUv.x = 0.5, strength is 0.0. | black
@@ -324,7 +341,6 @@ void main() {
 * Pattern-17 | 4 suqare - black and white
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = min(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
 
@@ -333,10 +349,9 @@ void main() {
 
 
 ==================================================
-* Pattern-18 | Invert pattern-17
+* Pattern-18 | Invert pattern-17 - like a tunnel
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = max(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
 
@@ -349,7 +364,6 @@ void main() {
 * Pattern-19 | black square in the middle - like a frame with thick edges
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
 
@@ -362,7 +376,6 @@ void main() {
 * Pattern-20 | Frame with thin edges
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = step(0.4, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
 
@@ -1226,4 +1239,144 @@ void main() {
     - x is the value to be clamped.
     - minVal is the minimum value that x can be.
     - maxVal is the maximum value that x can be.
+
+
+
+==================================================
+* Pattern-52 | 
+==================================================
+varying vec2 vUv;
+
+void main() {
+    float modX = mod(vUv.x / 0.2, 1.0);
+    float modY = mod(vUv.y / 0.1, 1.0);
+
+    float strength =  modX + modY;
+
+
+    strength = clamp(strength, 0.0, 1.0);
+
+    vec3 blackColor = vec3(0.0);
+    vec3 uvColor = vec3(0.86, vUv.x, 0.5);
+    vec3 mixedColor = mix(blackColor, uvColor, strength);
+
+    gl_FragColor = vec4(mixedColor, 1.0); 
+}
+
+
+==================================================
+* Pattern-53 | 
+==================================================
+varying vec2 vUv;
+
+void main() {
+    float strength = step(0.02, abs(vUv.x - 0.5) * abs(vUv.y - 0.5));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-54 | 
+==================================================
+varying vec2 vUv;
+
+void main() {
+    // Calculate the distance from the center
+    vec2 center = vec2(0.5);
+    float distance = length(vUv - center);
+
+    // Create a gradient effect
+    float strength = smoothstep(0.5, 1.0, 1.0 - distance);
+
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+
+==================================================
+* Pattern-55 | White hole like a white ball
+==================================================
+varying vec2 vUv;
+
+void main() {
+    // Calculate the distance from the center
+    vec2 center = vec2(0.5);
+    float distance = length(vUv - center);
+
+    // Create a gradient effect
+    float strength = smoothstep(0.5, 0.5, 1.0 - distance);
+
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+==================================================
+* Pattern-56 | dark hole
+==================================================
+varying vec2 vUv;
+
+void main() {
+    vec2 centeredUv = vUv - vec2(0.5, 0.5);
+    float distance = length(centeredUv);
+
+    // Define the radius of the black hole in the center
+    float holeRadius = 0.2;
+
+    // Create a gradient effect for the walls
+    float wallGradient = smoothstep(holeRadius, holeRadius + 0.6, distance);
+
+    // Create the color based on the distance
+    vec3 color = mix(vec3(0.0), vec3(1.0), wallGradient);
+
+    gl_FragColor = vec4(color, 1.0);
+}
+
+
+==================================================
+* Pattern-57 | 
+==================================================
+varying vec2 vUv;
+
+void main() {
+    // Center the coordinates 
+    vec2 center = vUv - vec2(0.5);
+
+    // Convert to polar coordinates
+    float angle = atan(center.y, center.x);
+    float radius = length(center);
+
+    float tunnel = 0.5 + 0.5 * sin(10.0 * radius - angle * 5.0);
+
+    // Create a gradient based on distance from center
+    float gradient = 1.0 - radius;
+
+    float strength = tunnel * gradient;
+ 
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+==================================================
+* Pattern-58 | A point light in distance
+==================================================
+varying vec2 vUv;
+
+void main() {
+    vec2 centeredUv = vUv - vec2(0.5, 0.5);
+    float distance = length(centeredUv);
+
+    // Apply a perspective effect
+    float perspective = 1.0 / (0.5 + distance * 10.0);
+
+    // Create a gradient effect based on distance from the center
+    float gradient = smoothstep(1.0, 0.0, distance);
+
+    float strength = perspective * gradient;
+    vec3 color = vec3(strength * 0.3);  // Darker value for realistic effect
+
+    gl_FragColor = vec4(color, 1.0);
+}
+
 */
