@@ -18,6 +18,7 @@ let height = window.innerHeight;
 //================== Objects ========================
 //========== Geometry
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
+// console.log(geometry.attributes);
 
 //========== Material
 const material = new THREE.ShaderMaterial({
@@ -25,6 +26,7 @@ const material = new THREE.ShaderMaterial({
   fragmentShader: fragment,
   side: THREE.DoubleSide,
 });
+// console.log(material);
 
 //========== Mesh
 const mesh = new THREE.Mesh(geometry, material);

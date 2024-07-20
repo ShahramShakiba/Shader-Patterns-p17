@@ -1,17 +1,27 @@
 varying vec2 vUv;
 
 void main() {
-    gl_FragColor = vec4(vUv.x, vUv.x, vUv.x, 1.0);
+    float strength = step(0.8, mod(vUv.x / 0.1, 1.0));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0); 
 }
 
+
+
 /*
+==================================================
+* Start point
+==================================================
+void main() {
+    gl_FragColor = vec4(0.5, 0.0, 1.0, 1.0);
+}
+
+
 ==================================================
 * Pattern-01
 ==================================================
 varying vec2 vUv;
-
 void main() {
-    // gl_FragColor = vec4(0.5, 0.0, 1.0, 1.0);
     gl_FragColor = vec4(vUv, 1.0, 1.0);
 }
 
@@ -41,9 +51,10 @@ The gradient effect is created because the red and green components linearly int
 * Pattern-02 | UV Coordinates
 ==================================================
 varying vec2 vUv;
-
 void main() {
     gl_FragColor = vec4(vUv.x, vUv.y, 0.0, 1.0);
+
+    // gl_FragColor = vec4(vUv.y, 0.459, vUv.x, 1.0); 
 }
 
 
@@ -55,10 +66,9 @@ void main() {
 
 
 ==================================================
-* Pattern-03 | Gradient: left: black - right: white  
+* Pattern-03 | Gradient: left: "black" and right: "white"  
 ==================================================
 varying vec2 vUv;
-
 void main() {
     gl_FragColor = vec4(vUv.x, vUv.x, vUv.x, 1.0);
 }
@@ -67,27 +77,26 @@ OR
 
 void main() {
     float strength = vUv.x;
+
     gl_FragColor = vec4(vec3(strength), 1.0);
 }
 
 
 ==================================================
-* Pattern-04 | top: white | bottom: black
+* Pattern-04 | top: "white" and bottom: "black"
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = vUv.y;
     
-    gl_FragColor = vec4(vec3(strength), 1.0);
+    gl_FragColor = vec4(strength, strength, strength, 1.0); 
 }
 
 
 ==================================================
-* Pattern-05 | top: black - bottom: white
+* Pattern-05 | top: "black" and bottom: "white"
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = 1.0 - vUv.y;
 
@@ -96,10 +105,9 @@ void main() {
 
 
 ==================================================
-* Pattern-06 | 10%: black - 90%: white
+* Pattern-06 | top: 90% white and bottom: 10% black 
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = vUv.y / 0.1;
 
@@ -111,9 +119,10 @@ void main() {
 * Pattern-07 | Stripe Effect
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = mod(vUv.y / 0.1, 1.0);
+    // float strength = mod(vUv.x / 0.35, 1.0);
+    // float strength = mod(vUv.x / 0.65, 0.5);
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
@@ -124,6 +133,10 @@ void main() {
 ? mod(x, y) :  modulus (remainder) after division
     - The mod(x, y) function returns the remainder of x divided by y.
     - For example, mod(5.5, 1.0) returns 0.5 because 5.5 divided by 1.0 leaves a remainder of 0.5.
+
+    (X) valueToBeWrapped: The point or value that you want to be wrapped or repeated.
+
+    (Y) wrappingInterval: The amount or interval at which the value should be wrapped or repeated.
 
 ? Stripe Effect :
     - The stripes are horizontal because the calculation uses vUv.y.
@@ -136,7 +149,6 @@ void main() {
 * Pattern-08 | Sharp Stripe Effect
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = mod(vUv.y / 0.1, 1.0);
 
@@ -151,21 +163,32 @@ void main() {
 
 ! do not use if-else statment or tarnary operator because they can impact performance, if you can avoid doing "if-else" or " tarnary"
 
+
 INSTEAD USE : 
 
+
 ? step() :
-    - when it reaches a limit, it'll be 1 and before that 0
+    - when it reaches a limit, it'll be 1(white) and before that 0(black)
+
+? float step(float threshold, float inputValue);
+    - threshold: The value that defines the boundary or limit.
+    - inputValue: The value to be tested against the threshold.
+
 
 varying vec2 vUv;
-
 void main() {
+    // float strength = mod(vUv.y / 0.1, 1.0);
+    // strength = step(0.5, strength);
+
     float strength = mod(vUv.y / 0.1, 1.0);
-    strength = step(0.5, strength);
+    strength = step(0.3, strength);
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
 
-  - if the value above this limit(0.5) the step will provide 1 
+  - for every 0.1 units in the y-axis 
+       30% of the interval (0.03 units) will be black.
+       70% of the interval (0.07 units) will be white.
 
 
 
@@ -173,7 +196,6 @@ void main() {
 * Pattern-09 | Sharp Stripe Effect but narrow & horizontally
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = mod(vUv.y / 0.1, 1.0);
     strength = step(0.8, strength);
@@ -187,10 +209,8 @@ void main() {
 * Pattern-10 | Sharp Stripe Effect but narrow & vertically
 ==================================================
 varying vec2 vUv;
-
 void main() {
-    float strength = mod(vUv.x / 0.1, 1.0);
-    strength = step(0.8, strength);
+    float strength = step(0.8, mod(vUv.x / 0.1, 1.0));
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
