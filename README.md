@@ -326,19 +326,10 @@ UV coordinates are 2D coordinates used in 3D modeling to map textures onto the s
 
 
 
-
-
-
-
-
-<!-------- try it live -------->
-#### _Try it out immediately, and if you enjoy it, please give me a star._ &nbsp; <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Glowing%20Star.png" alt="Glowing Star" width="25"  /> <a href="" target="_blank"> &nbsp; _Shader Patterns_ </a> 
-
-
 <!--------- Video --------->
 <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Clapper%20Board.webp" alt="Clapper Board" width="35" /> &nbsp; 
 
-
+https://github.com/user-attachments/assets/dfa5f1c6-d007-46e8-8ff1-a1c22db696a3
 
   <br/> 
 
