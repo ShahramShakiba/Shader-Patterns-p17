@@ -283,11 +283,34 @@
     </td>
     <td>
       <p>Pattern 59</p>
-      <img src="" alt="Pattern-59" width="300" />
+      <img src="https://github.com/user-attachments/assets/e704d0ec-3d54-427a-8ee8-c5486b854984" alt="Pattern-59" width="300" />
     </td>
     <td>
       <p>Pattern 60</p>
-      <img src="" alt="Pattern-60" width="300" />
+      <img src="https://github.com/user-attachments/assets/97e47c88-c4d1-4b17-9862-92581d754b74" alt="Pattern-60" width="300" />
+    </td>
+   </tr>
+
+  <tr align="center">
+     <td>
+      <p>Pattern 61</p>
+      <img src="https://github.com/user-attachments/assets/c92b2541-557a-4656-8e28-0456e4eacc8a" alt="Pattern-61" width="300" />
+    </td>
+     <td>
+      <p>Pattern 62</p>
+      <img src="https://github.com/user-attachments/assets/cd9c7e0c-50e3-4c95-b1c7-bbf2bd73b881" alt="Pattern-62" width="300" />
+    </td>
+     <td>
+      <p>Pattern 63</p>
+      <img src="https://github.com/user-attachments/assets/ba387abc-6052-4fdf-8470-0ab8442a7fed" alt="Pattern-63" width="300" />
+    </td>
+    <td>
+      <p>Pattern 64</p>
+      <img src="" alt="Pattern-54" width="300" />
+    </td>
+    <td>
+      <p>Pattern 65</p>
+      <img src="" alt="Pattern-65" width="300" />
     </td>
    </tr>
 </table>
