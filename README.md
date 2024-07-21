@@ -306,11 +306,34 @@
     </td>
     <td>
       <p>Pattern 64</p>
-      <img src="" alt="Pattern-54" width="300" />
+      <img src="https://github.com/user-attachments/assets/e3850b4a-1477-417e-ba7d-bf9d8c2c1fe5" alt="Pattern-64" width="300" />
     </td>
     <td>
       <p>Pattern 65</p>
-      <img src="" alt="Pattern-65" width="300" />
+      <img src="https://github.com/user-attachments/assets/769cff8b-22ad-4f13-8ed2-c0f8ac66e7bf" alt="Pattern-65" width="300" />
+    </td>
+   </tr>
+
+  <tr align="center">
+     <td>
+      <p>Pattern 66</p>
+      <img src="https://github.com/user-attachments/assets/973b25bd-324f-4b6d-9613-05e2e02aafe2" alt="Pattern-66" width="300" />
+    </td>
+     <td>
+      <p>Pattern 67</p>
+      <img src="https://github.com/user-attachments/assets/638de78f-c1f7-4b9f-a020-9023f3bd2f14" alt="Pattern-67" width="300" />
+    </td>
+     <td>
+      <p>Pattern 68</p>
+      <img src="https://github.com/user-attachments/assets/cafb42bb-4aeb-4266-8484-88901ee8d283" alt="Pattern-68" width="300" />
+    </td>
+    <td>
+      <p>Pattern 69</p>
+      <img src="https://github.com/user-attachments/assets/6e32c91b-aa29-4285-81cb-eee31f28375e" alt="Pattern-69" width="300" />
+    </td>
+    <td>
+      <p>Pattern 70</p>
+      <img src="https://github.com/user-attachments/assets/0b10d486-b68b-4dfb-a591-9e22e204a7bd" alt="Pattern-70" width="300" />
     </td>
    </tr>
 </table>
