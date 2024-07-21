@@ -24,6 +24,9 @@ const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
 const material = new THREE.ShaderMaterial({
   vertexShader: vertex,
   fragmentShader: fragment,
+  uniforms : {
+    uTime: {value: 0.0}
+  },
   side: THREE.DoubleSide,
 });
 // console.log(material);
@@ -62,7 +65,15 @@ window.addEventListener('resize', () => {
 });
 
 //=================== Animate =======================
+let startTime = Date.now(); 
+
 const tick = () => {
+  const elapsedTime = (Date.now() - startTime) / 1000; 
+
+  // Update the uTime uniform
+  material.uniforms.uTime.value = elapsedTime;
+
+  
   controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(tick);

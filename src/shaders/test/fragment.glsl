@@ -1,7 +1,12 @@
 varying vec2 vUv;
 
 void main() {
-    float strength = step(0.4, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+    vec2 lightUv = vec2(
+        vUv.x * 0.1 + 0.45,
+        vUv.y * 0.5 + 0.25
+    );
+
+    float strength = 0.015 / distance(lightUv, vec2(0.5));
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
@@ -397,10 +402,9 @@ void main() {
 
 
 ==================================================
-* Pattern-21 | low level gradient - vertically
+* Pattern-21 | Vertical Bands or Grayscale Steps
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = floor(vUv.x * 10.0) / 10.0;
 
@@ -410,14 +414,13 @@ void main() {
 
 ? floor : 
   - get the lower value
-
+  - Create vertical stripes or bands across the screen
 
 
 ==================================================
 * Pattern-22 | low level gradient - like a Grid network
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = 
         floor(vUv.x * 10.0) / 10.0 * floor(vUv.y * 10.0) / 10.0;
@@ -442,6 +445,28 @@ void main() {
         
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
+
+
+
+? random(vec2 st) :
+    - generates a pseudo-random number based on the input 2D coordinates st
+
+? st :
+    - The argument "st" is a 2D vector, often representing texture coordinates or screen space coordinates
+
+? dot(st.xy, vec2(12.9898, 78.233)) : 
+    - The purpose of this dot product is to combine the x and y components of st into a single value in a manner that introduces complexity, helping in pseudo-random generation.
+
+? sin() : 
+    - The sin function takes the result of the dot product and computes its sine. The sine function is used because it produces a non-linear, periodic output that contributes to the randomness.
+
+? 12.9898, 78.233, and 43758.5453123 : 
+    - These are arbitrary constants chosen to ensure the values produced by the dot product and sine function are suitably distributed and not easily predictable.
+
+    - "43758.5453123" scales the sine value to spread out the resulting values over a wider range before applying fract.
+
+? fract() :
+    - The fract function takes the fractional part of the input (i.e., it returns the value minus its integer part). This effectively normalizes the result to the range [0.0, 1.0], which is useful for random number generation.
 
 
 
@@ -495,7 +520,6 @@ void main() {
 * Pattern-26 | - Length of UV
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = length(vUv);
 
@@ -509,7 +533,6 @@ void main() {
 
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = length(vUv - 0.5);
 
@@ -520,7 +543,7 @@ void main() {
 OR
 
 
-? distance between UV coordinate and a desire point
+? distance between "UV coordinate" and a "desire point"
 
 void main() {
     float strength = distance(vUv, vec2(0.7, 0.3));
@@ -547,7 +570,6 @@ void main() {
 * Pattern-29 | Moon Shape Effect
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = 0.05 / distance(vUv, vec2(0.5));
 
@@ -564,7 +586,6 @@ void main() {
 * Pattern-30 | Stretch Moon
 ==================================================
 varying vec2 vUv;
-
 void main() {
     vec2 lightUv = vec2(
         vUv.x * 0.1 + 0.45,
@@ -1246,7 +1267,6 @@ void main() {
 * Pattern-52 | 
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float modX = mod(vUv.x / 0.2, 1.0);
     float modY = mod(vUv.y / 0.1, 1.0);
@@ -1268,7 +1288,6 @@ void main() {
 * Pattern-53 | 
 ==================================================
 varying vec2 vUv;
-
 void main() {
     float strength = step(0.02, abs(vUv.x - 0.5) * abs(vUv.y - 0.5));
 
@@ -1281,7 +1300,6 @@ void main() {
 * Pattern-54 | 
 ==================================================
 varying vec2 vUv;
-
 void main() {
     // Calculate the distance from the center
     vec2 center = vec2(0.5);
@@ -1299,7 +1317,6 @@ void main() {
 * Pattern-55 | White hole like a white ball
 ==================================================
 varying vec2 vUv;
-
 void main() {
     // Calculate the distance from the center
     vec2 center = vec2(0.5);
@@ -1316,7 +1333,6 @@ void main() {
 * Pattern-56 | dark hole
 ==================================================
 varying vec2 vUv;
-
 void main() {
     vec2 centeredUv = vUv - vec2(0.5, 0.5);
     float distance = length(centeredUv);
@@ -1338,7 +1354,6 @@ void main() {
 * Pattern-57 | 
 ==================================================
 varying vec2 vUv;
-
 void main() {
     // Center the coordinates 
     vec2 center = vUv - vec2(0.5);
@@ -1362,7 +1377,6 @@ void main() {
 * Pattern-58 | A point light in distance
 ==================================================
 varying vec2 vUv;
-
 void main() {
     vec2 centeredUv = vUv - vec2(0.5, 0.5);
     float distance = length(centeredUv);
@@ -1378,5 +1392,151 @@ void main() {
 
     gl_FragColor = vec4(color, 1.0);
 }
+
+
+
+==================================================
+* Pattern-59 | Checkerboard
+==================================================
+varying vec2 vUv;
+void main() {
+    float xStrength = floor(vUv.x * 10.0);
+    float yStrength = floor(vUv.y * 10.0);
+    float strength = mod(xStrength + yStrength, 2.0);
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+? floor : 
+    - Combine vertical and horizontal bands to create a checkerboard pattern. 
+
+? mod :
+    - creates a repeating sequence from 0 to 1.
+
+
+==================================================
+* Pattern-60 | Circular Rings
+==================================================
+varying vec2 vUv;
+
+void main() {
+    float dist = distance(vUv, vec2(0.5));
+    float strength = sin(dist * 50.0) * 0.5 + 0.5; // Adjust frequency with 50.0
+    
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+==================================================
+* Pattern-61 | Ripple Effect - Animated - Circular Wave Patterns
+==================================================
+varying vec2 vUv;
+uniform float uTime;
+
+void main() {
+    float dist = distance(vUv, vec2(0.5));
+    float strength = sin(dist * 20.0 - uTime * 5.0) * 0.5 + 0.5; 
+    // uTime for animation
+    
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+? Update the Shader Material :
+    const material = new THREE.ShaderMaterial({
+        vertexShader: vertex,
+        fragmentShader: fragment,
+        uniforms: {
+            uTime: { value: 0.0 }
+        },
+        side: THREE.DoubleSide,
+    });
+
+? Modify the Animation Loop :
+    let startTime = Date.now(); 
+
+    const tick = () => {
+        const elapsedTime = (Date.now() - startTime) / 1000; 
+
+        // Update the uTime uniform
+        material.uniforms.uTime.value = elapsedTime;
+
+  
+        controls.update();
+        renderer.render(scene, camera);
+        window.requestAnimationFrame(tick);
+    };
+
+    tick();
+
+
+==================================================
+* Pattern-62 | Starburst Effect
+==================================================
+varying vec2 vUv;
+
+void main() {
+    vec2 center = vec2(0.5);
+    vec2 toCenter = vUv - center;
+    float angle = atan(toCenter.y, toCenter.x);
+    float dist = length(toCenter);
+    float strength = abs(sin(angle * 10.0)) / (dist * 10.0 + 0.1);
+    
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
+
+
+==================================================
+* Pattern-63 | Mandelbrot-Inspired Patterns
+==================================================
+varying vec2 vUv;
+
+void main() {
+    vec2 center = vec2(0.5);
+    vec2 z = vUv * 2.0 - 1.0;
+    vec2 c = z;
+    float intensity = 0.0;
+
+    for (int i = 0; i < 100; i++) {
+        float x = (z.x * z.x - z.y * z.y) + c.x;
+        float y = (z.y * z.x + z.x * z.y) + c.y;
+
+        if (length(vec2(x, y)) > 2.0) break;
+        
+        z = vec2(x, y);
+        intensity += 0.01;
+    }
+
+    gl_FragColor = vec4(intensity, intensity, intensity, 1.0);
+}
+
+
+
+==================================================
+* Pattern-64 | 
+==================================================
+
+
+
+
+==================================================
+* Pattern-65 | 
+==================================================
+
+
+
+
+==================================================
+* Pattern-66 | 
+==================================================
+
+
+
+
+==================================================
+* Pattern-67 | 
+==================================================
 
 */
