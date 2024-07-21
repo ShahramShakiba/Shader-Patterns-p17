@@ -1,15 +1,8 @@
-varying vec2 vUv;
-
 void main() {
-    vec2 lightUv = vec2(
-        vUv.x * 0.1 + 0.45,
-        vUv.y * 0.5 + 0.25
-    );
-
-    float strength = 0.015 / distance(lightUv, vec2(0.5));
-
-    gl_FragColor = vec4(strength, strength, strength, 1.0);
+    gl_FragColor = vec4(0.5, 0.0, 1.0, 1.0);
 }
+
+
 
 
 /*
@@ -431,7 +424,7 @@ void main() {
 
 
 ==================================================
-* Pattern-23 | A broken TV channel
+* Pattern-23 | A broken TV channel -  Noise Pattern
 ==================================================
 varying vec2 vUv;
 
@@ -1264,7 +1257,7 @@ void main() {
 
 
 ==================================================
-* Pattern-52 | 
+* Pattern-52 |  gradient coloring of the tiles
 ==================================================
 varying vec2 vUv;
 void main() {
@@ -1285,7 +1278,7 @@ void main() {
 
 
 ==================================================
-* Pattern-53 | 
+* Pattern-53 | Curved Star Quadrants
 ==================================================
 varying vec2 vUv;
 void main() {
@@ -1297,7 +1290,7 @@ void main() {
 
 
 ==================================================
-* Pattern-54 | 
+* Pattern-54 | Radial Gradient
 ==================================================
 varying vec2 vUv;
 void main() {
@@ -1309,6 +1302,18 @@ void main() {
     float strength = smoothstep(0.5, 1.0, 1.0 - distance);
 
     gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+OR 
+
+
+varying vec2 vUv;
+void main() {
+    float dist = distance(vUv, vec2(0.5));
+    float strength = 1.0 - dist * 2.0;
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
 
 
@@ -1351,7 +1356,7 @@ void main() {
 
 
 ==================================================
-* Pattern-57 | 
+* Pattern-57 | Radial Swirl
 ==================================================
 varying vec2 vUv;
 void main() {
@@ -1406,6 +1411,19 @@ void main() {
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
+
+OR
+
+varying vec2 vUv;
+void main() {
+    float checkSize = 10.0;
+    float x = mod(floor(vUv.x * checkSize), 2.0);
+    float y = mod(floor(vUv.y * checkSize), 2.0);
+    float strength = step(0.5, abs(x - y));
+
+    gl_FragColor = vec4(strength, strength, strength, 1.0);
+}
+
 
 
 ? floor : 
@@ -1517,26 +1535,248 @@ void main() {
 ==================================================
 * Pattern-64 | 
 ==================================================
+vec2 fade(vec2 t) {
+    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
+}
 
+vec4 permute(vec4 x) {
+    return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+float cnoise(vec2 P) {
+    vec4 Pi = floor(P.xyxy) + vec4(0.0, 0.0, 1.0, 1.0);
+    vec4 Pf = fract(P.xyxy) - vec4(0.0, 0.0, 1.0, 1.0);
+    Pi = mod(Pi, 289.0);
+
+    vec4 ix = Pi.xzxz;
+    vec4 iy = Pi.yyww;
+    vec4 fx = Pf.xzxz;
+    vec4 fy = Pf.yyww;
+    vec4 i = permute(permute(ix) + iy);
+
+    vec4 gx = 2.0 * fract(i * 0.0243902439) - 1.0;
+    vec4 gy = abs(gx) - 0.5;
+    vec4 tx = floor(gx + 0.5);
+    gx = gx - tx;
+    vec2 g00 = vec2(gx.x, gy.x);
+    vec2 g10 = vec2(gx.y, gy.y);
+    vec2 g01 = vec2(gx.z, gy.z);
+    vec2 g11 = vec2(gx.w, gy.w);
+
+    vec4 norm = 1.79284291400159 - 0.85373472095314 *
+        vec4(dot(g00, g00), dot(g01, g01), dot(g10, g10), dot(g11, g11));
+    g00 *= norm.x;
+    g01 *= norm.y;
+    g10 *= norm.z;
+    g11 *= norm.w;
+    float n00 = dot(g00, vec2(fx.x, fy.x));
+    float n10 = dot(g10, vec2(fx.y, fy.y));
+    float n01 = dot(g01, vec2(fx.z, fy.z));
+    float n11 = dot(g11, vec2(fx.w, fy.w));
+
+    vec2 fade_xy = fade(Pf.xy);
+    vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+    float n_xy = mix(n_x.x, n_x.y, fade_xy.y);
+
+    return 2.3 * n_xy;
+}
+
+varying vec2 vUv;
+
+float fractalNoise(vec2 uv) {
+    float noise = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+
+    for (int i = 0; i < 5; i++) {
+        noise += amplitude * cnoise(uv * frequency);
+        amplitude *= 0.5;
+        frequency *= 2.0;
+    }
+
+    return noise;
+}
+
+void main() {
+    float noiseValue = fractalNoise(vUv * 10.0);
+    float strength = step(0.9, sin(noiseValue * 20.0));
+
+    strength = clamp(strength, 0.0, 1.0);
+
+    vec3 blackColor = vec3(0.0);
+    vec3 uvColor = vec3(vUv, 1.0);
+    vec3 mixedColor = mix(blackColor, uvColor, strength);
+    gl_FragColor = vec4(mixedColor, 1.0);
+}
 
 
 
 ==================================================
-* Pattern-65 | 
+* Pattern-65 | Diagonal Stripe Pattern
 ==================================================
+varying vec2 vUv;
 
+void main() {
+    // Create a diagonal stripe pattern
+    float stripeWidth = 0.1; // Adjust the width of the stripes
+    float angle = 45.0; // Angle in degrees of the stripes
+    float stripeSpacing = 1.0 / stripeWidth; // Calculate the spacing of stripes
+
+    // Rotate the UV coordinates
+    vec2 uv = vUv * 2.0 - 1.0; // Normalize UV to range [-1, 1]
+    float angleRad = radians(angle); // Convert angle to radians
+    vec2 rotatedUV = vec2(
+        uv.x * cos(angleRad) - uv.y * sin(angleRad),
+        uv.x * sin(angleRad) + uv.y * cos(angleRad)
+    );
+
+    // Create the stripes
+    float pattern = mod(floor(rotatedUV.y * stripeSpacing), 2.0);
+
+    // Use pattern to create color
+    vec3 color = mix(vec3(1.0), vec3(0.0), pattern);
+    gl_FragColor = vec4(color, 1.0);
+}
 
 
 
 ==================================================
-* Pattern-66 | 
+* Pattern-66 | Crosshatch Pattern
 ==================================================
+varying vec2 vUv;
 
+void main() {
+    // Create diagonal stripes at two different angles
+    float stripeWidth = 0.1; // Adjust the width of the stripes
+    float angle1 = 45.0; // First angle in degrees
+    float angle2 = 135.0; // Second angle in degrees
+
+    // Rotate the UV coordinates
+    vec2 uv = vUv * 2.0 - 1.0; // Normalize UV to range [-1, 1]
+    float angleRad1 = radians(angle1); // Convert angle to radians
+    float angleRad2 = radians(angle2); // Convert angle to radians
+
+    vec2 rotatedUV1 = vec2(
+        uv.x * cos(angleRad1) - uv.y * sin(angleRad1),
+        uv.x * sin(angleRad1) + uv.y * cos(angleRad1)
+    );
+    vec2 rotatedUV2 = vec2(
+        uv.x * cos(angleRad2) - uv.y * sin(angleRad2),
+        uv.x * sin(angleRad2) + uv.y * cos(angleRad2)
+    );
+
+    // Create the stripes
+    float pattern1 = mod(floor(rotatedUV1.y * (1.0 / stripeWidth)), 2.0);
+    float pattern2 = mod(floor(rotatedUV2.y * (1.0 / stripeWidth)), 2.0);
+
+    // Combine both patterns
+    float pattern = max(pattern1, pattern2);
+
+    // Use pattern to create color
+    vec3 color = mix(vec3(1.0), vec3(0.0), pattern);
+    gl_FragColor = vec4(color, 1.0);
+}
 
 
 
 ==================================================
-* Pattern-67 | 
+* Pattern-67 | Wavy Stripes
 ==================================================
+varying vec2 vUv;
 
+void main() {
+    // Parameters for the wave
+    float stripeWidth = 0.1; // Adjust the width of the stripes
+    float frequency = 10.0; // Frequency of the wave
+    float amplitude = 0.05; // Amplitude of the wave
+
+    // Create the wavy stripe pattern
+    float wave = sin(vUv.y * frequency + vUv.x * amplitude);
+    float pattern = mod(floor(vUv.x * (1.0 / stripeWidth)), 2.0);
+
+    // Combine the wave and pattern
+    float finalPattern = step(0.5, wave + pattern);
+
+    // Use pattern to create color
+    vec3 color = mix(vec3(1.0), vec3(0.0), finalPattern);
+    gl_FragColor = vec4(color, 1.0);
+}
+
+
+
+==================================================
+* Pattern-68 | Concentric Circles
+==================================================
+#define PI 3.1415926535897932384626433832795
+
+varying vec2 vUv;
+
+void main() {
+    float radius = distance(vUv, vec2(0.5));
+    float stripes = sin(radius * 40.0 * PI);
+    float strength = step(0.0, stripes);
+
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+
+==================================================
+* Pattern-69 | Hexagonal Grid
+==================================================
+varying vec2 vUv;
+
+void main() {
+    vec2 uv = vUv * 10.0; // Scale UVs for more hexagons
+    uv.x += uv.y * 0.5;
+    uv.y *= 0.866025404; // sqrt(3)/2 to maintain hexagon aspect ratio
+    
+    vec2 i = floor(uv);
+    vec2 f = fract(uv);
+    
+    float d = min(dot(f, f), dot(1.0 - f, 1.0 - f));
+    float strength = step(0.02, d); // Adjust thickness of hexagon lines
+    
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
+
+
+
+==================================================
+* Pattern-70 | Voronoi Pattern
+==================================================
+varying vec2 vUv;
+
+float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+}
+
+float voronoi(vec2 st) {
+    vec2 i_st = floor(st);
+    vec2 f_st = fract(st);
+    
+    float minDist = 1.0;
+    vec2 minPoint;
+    for (int y=-1; y<=1; y++) {
+        for (int x=-1; x<=1; x++) {
+            vec2 neighbor = vec2(float(x),float(y));
+            vec2 point = vec2(random(i_st + neighbor));
+            vec2 diff = neighbor + point - f_st;
+            float dist = length(diff);
+            if (dist < minDist) {
+                minDist = dist;
+                minPoint = neighbor + point;
+            }
+        }
+    }
+    return minDist;
+}
+
+void main() {
+    float cells = 10.0;
+    vec2 uv = vUv * cells;
+    
+    float strength = voronoi(uv);
+    gl_FragColor = vec4(vec3(strength), 1.0);
+}
 */
